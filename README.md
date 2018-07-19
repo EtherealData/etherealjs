@@ -20,7 +20,7 @@ You will find detailed EtherealJS documentation [on the website](https://etherea
 ## Examples
 
 Here is a quick Hello World app to get you started
-
+-------------------------
 ### Your First Component
 First, create a new directory, and clone https://github.com/etherealdata/etherealjs repo. 
 
@@ -94,7 +94,7 @@ new Runtime({
     }
 });
 ```
-
+----------------------------
 ### Style It
 
 In your component, create a function named style that returns a style map, like in the example. 
@@ -156,7 +156,7 @@ new Runtime({
     }
 });
 ```
-
+-----------------------
 ### Create an SPA
 Go back to your HTML file, and replace the Component tag with a new Router tag. 
 Inside of the Router tag, place two child Route tags. 
@@ -280,7 +280,7 @@ new Runtime({
     }
 });
 ```    
-
+-------------------------
 ### Run a build
 If you need to use this for a production site, you will need to make sure to support browsers that do not use ES6 imports. 
 
