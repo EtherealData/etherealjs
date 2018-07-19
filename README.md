@@ -14,7 +14,7 @@ If polyfilled with babel, it can support IE8 as well.
 
 ## Documentation
 
-You will find detailed EtherealJS documentation [on the website](https://etherealjs.org/wiki).  (COMING SOON)
+You will find detailed EtherealJS documentation [on the website](https://etherealjs.org).  (COMING SOON)
 
 
 ## Examples
@@ -109,8 +109,90 @@ This functionality ensures that your components will never break an existing app
 Alternatively, you may also assign a class to the outermost div or element in your draw function, and use that in your style map. 
 Please note however, this approach may override styles in an existing application if using an existing CSS class name.
 
+
 #### home.js
     
+```
+import Component from './etherealjs/src/component.js';
+import Runtime from './etherealjs/src/runtime.js';
+
+export class HelloWorld extends Component {
+    constructor(config) {
+        super(config);
+    }
+    style() {
+        return {
+            '': {
+                'background': '#eee',
+                'h1': {
+                    'font-size': '24px',
+                    'color': '#666',
+                    'padding': '10px'
+                },
+                'button': {
+                    'background': '#127fbd',
+                    'color: '#fff',
+                    'font-size': '18px'
+                }
+            }
+        }
+    }
+    draw() {
+        let location = this.properties['location'] || 'World';
+        return `
+                <div>
+                    <h1>
+                        Hello ${location}!
+                    </h1>
+                </div>
+                <button>Update</button>
+        `
+    }
+}
+
+new Runtime({
+    library: {
+        HelloWorld: HelloWorld
+    }
+});
+```
+
+### Create an SPA
+Go back to your HTML file, and replace the Component tag with a new Router tag. 
+Inside of the Router tag, place two child Route tags. 
+
+Assign a 'path' attribute and a 'definition' attribute to each one. 
+For the first one, assign '/' as the path, and 'HelloWorld' as the definition. 
+For the second one, make it '/about' and 'About' for the definition. 
+
+Create a new Component definition in the JS file, and in the draw template, create a textarea and a button. 
+
+Finally, include the new component in the runtime's library.
+
+#### index.html
+    
+        
+```
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hello World with EtherealJS!</title>
+</head>
+<body>
+    <Router>
+        <Route path="/" definition="HelloWorld"></Route>
+        <Route path="/about" definition="About"></Route>
+    </Router>
+    <script src="./home.js" type="module"></script>
+</body>
+</html>
+```
+        
+
+    
+#### home.js
+```    
 import Component from './etherealjs/src/component.js';
 import Runtime from './etherealjs/src/runtime.js';
 
@@ -153,43 +235,113 @@ export class HelloWorld extends Component {
     }
 }
 
+export class About extends Component {
+    constructor(config) {
+        super(config);
+    }
+    style() {
+        return {
+            '': {
+                'background': '#eee',
+                'textarea': {
+                    'font-size': '24px',
+                    'color': '#000',
+                    'padding': '10px',
+                    'background': '#fff'
+                },
+                'button': {
+                    'background': '#127fbd',
+                    'color: '#fff',
+                    'font-size': '18px'
+                }
+            }
+        }
+    }
+    draw() {
+
+        return `
+
+
+                <div>
+                    <textarea></textarea>
+                </div>
+                <button>Submit</button>
+
+
+
+        `
+    }
+}
+
 new Runtime({
     library: {
-        HelloWorld: HelloWorld
+        HelloWorld: HelloWorld,
+        About: About
     }
 });
+```    
 
-## QUICK START
-To see it in action quickly:
+### Run a build
+If you need to use this for a production site, you will need to make sure to support browsers that do not use ES6 imports. 
 
-Terminal
+We have made it as simple as running a command. 
+First, 'npm install' to make sure webpack is installed. Then, 'npm run build'. 
+
+#### Terminal:
 ```
+npm install
+npm run build
+```                             
+
+
+Webpack will build a dependency graph based off of your imports and compile everything into dist/main.js. Sweet. 
+
+Now, instead of loading script as a module in index, point it to dist/main.js as a text/javascript type instead. 
+
+Wallah!
+
+#### index.html
+         
+```
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hello World with EtherealJS!</title>
+</head>
+<body>
+    <Router>
+        <Route path="/" definition="HelloWorld"></Route>
+        <Route path="/about" definition="About"></Route>
+    </Router>
+    <script src="./dist/main.js" type="text/javascript"></script>
+</body>
+</html>
+```
+      
+
+### QUICK START
+Clone the etherealjs website to see it in action.
+
+#### Terminal
+```
+git clone https://github.com/etherealdata/etherealjs-org
+cd etherealjs-org/assets
 git clone https://github.com/etherealdata/etherealjs
-cd etherealjs
+cd ..
 npm install http-server
 http-server
 ```
-
-
+        
 ## Installation
 
 For now, git clone this repo. We will be bundling into NPM soon, as well as hosting a minified JS version on a CDN for easier usage.
 
-EtherealJS is designed to work with the latest browsers, by using script-type module imports. 
-For example:
-```
-<script src="script.js" type="module"></script>
-```
-It can also be polyfilled and turned into a script for older browsers. We plan on hosting both a minified script bundle, and a polyfilled/minified script bundle on CDN soon.
 ## Contributing
 
-The purpose of this repository, is to provide to the public what has taken over a decade of UI development knowledge. It is in an early stage, and we are currently seeking adoption and contributions from experienced web-developers we see value in this concept.
-If you would like to contribute, notify me beforehand at <a href="mailto:gio@etherealdata.com">gio@etherealdata.com</a>. You may create a branch, commit your changes, and submit a pull request for other me and other contributors to approve.
+The purpose of this repository, is to provide to the public what has taken over a decade of UI development knowledge. It is in an early stage, and we are currently seeking adoption and contributions from experienced web-developers who see value in this concept.
 
-### Backlog/Next Features
-- JS/CSS Parser to parse JS object and convert into a style sheet.
-- Expand event map
-- Base Router
+If you would like to contribute, notify me beforehand at <a href="mailto:gio@etherealdata.com">gio@etherealdata.com</a>. You may create a branch, commit your changes, and submit a pull request for other me and other contributors to approve.
 
 
 ### License
