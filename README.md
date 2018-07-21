@@ -158,6 +158,74 @@ new Runtime({
     }
 });
 ```
+
+
+----------------------------
+### Handle an Event
+
+In your component, create a function named style that returns a style map, like in the example. 
+
+To make code more readable, make sure to define class properties before subclasses. 
+
+It may look weird at first, but the empty selector refers to the outermost div or container of your component's instance. 
+
+A component-pid attribute selector will be used in place of the blank selector. 
+This functionality ensures that your components will never break an existing application's styles. Never. 
+
+Alternatively, you may also assign a class to the outermost div or element in your draw function, and use that in your style map. 
+Please note however, this approach may override styles in an existing application if using an existing CSS class name.
+
+
+#### home.js
+    
+```
+import Component from './etherealjs/src/component.js';
+import Runtime from './etherealjs/src/runtime.js';
+
+export class HelloWorld extends Component {
+    constructor(config) {
+        super(config);
+    }
+    style() {
+        return {
+            '': {
+                'background': '#eee',
+                'h1': {
+                    'font-size': '24px',
+                    'color': '#666',
+                    'padding': '10px'
+                },
+                'button': {
+                    'background': '#127fbd',
+                    'color: '#fff',
+                    'font-size': '18px'
+                }
+            }
+        }
+    }
+    update() {
+        this.setProperty('location', 'Florida');
+    }
+    draw() {
+        let location = this.properties['location'] || 'World';
+        return `
+                <div>
+                    <h1>
+                        Hello ${location}!
+                    </h1>
+                </div>
+                <button e click="update">Update</button>
+        `
+    }
+}
+
+new Runtime({
+    library: {
+        HelloWorld: HelloWorld
+    }
+});
+```
+
 -----------------------
 ### Create an SPA
 Go back to your HTML file, and replace the Component tag with a new Router tag. 
@@ -172,8 +240,6 @@ Create a new Component definition in the JS file, and in the draw template, crea
 Finally, include the new component in the runtime's library.
 
 #### index.html
-    
-        
 ```
 <!DOCTYPE html>
 <html lang="en">
@@ -219,20 +285,18 @@ export class HelloWorld extends Component {
             }
         }
     }
+    update() {
+        this.setProperty('location', 'Florida');
+    }
     draw() {
         let location = this.properties['location'] || 'World';
         return `
-
-
                 <div>
                     <h1>
                         Hello ${location}!
                     </h1>
                 </div>
-                <button>Update</button>
-
-
-
+                <button e click="update">Update</button>
         `
     }
 }
@@ -259,15 +323,15 @@ export class About extends Component {
             }
         }
     }
+    submit() {
+        // submit logic here
+    }
     draw() {
-
         return `
-
-
                 <div>
                     <textarea></textarea>
                 </div>
-                <button>Submit</button>
+                <button e submit="submit">Submit</button>
 
 
 
@@ -282,6 +346,7 @@ new Runtime({
     }
 });
 ```    
+
 -------------------------
 ### Run a build
 If you need to use this for a production site, you will need to make sure to support browsers that do not use ES6 imports. 
@@ -303,7 +368,6 @@ Now, instead of loading script as a module in index, point it to dist/main.js as
 Wallah!
 
 #### index.html
-         
 ```
 <!DOCTYPE html>
 <html lang="en">
@@ -320,7 +384,7 @@ Wallah!
 </body>
 </html>
 ```
-      
+--------------------------      
 
 ### QUICK START
 Clone the etherealjs website to see it in action.
