@@ -1,4 +1,4 @@
-![](https://etherealjs.org/logo-blue.png)
+![](https://etherealjs.org/assets/images/logo-blue.png)
 
 # EtherealJS (https://etherealjs.org/) &middot; [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/etherealdata/etherealJS/blob/master/LICENSE)
 
