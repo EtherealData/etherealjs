@@ -18,7 +18,7 @@ export default class Runtime extends Base {
 
         this.library = this.library || {};
 
-        this.route() ;      
+        this.route();
 
         let components = [...this.context.querySelectorAll('Component')];
         if(this.definition) {

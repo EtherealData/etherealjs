@@ -7,7 +7,8 @@ export default class Router extends Base {
 	_onLoaded(){
 		if(!this.routes || !this.runtime) {
 			throw new Error('Config missing routes or runtime')
-		}
+        }
+        console.log('got pathname', window.location.pathname);
 		this.path = window.location.pathname;
 		if(this.routes[this.path]) {
 			new this.runtime.library[this.routes[this.path]]({

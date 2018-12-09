@@ -11,16 +11,24 @@ export default class Component extends BaseDisplay {
         super._onLoaded();
     }
     synchronize() {
-        let instance = document.querySelector(`[component-pid="${this.pid}"]`),
-            parent = instance.parentNode;
+        const instance = document.querySelector(`[component-pid="${this.pid}"]`);
+
         instance.outerHTML = Static.stampPID(this.pid, this.draw());
-        let newInstance = document.querySelector(`[component-pid="${this.pid}"]`)
-        let components = [...newInstance.querySelectorAll('Component')];
+
+        const newInstance = document.querySelector(`[component-pid="${this.pid}"]`)
+        const components = [...newInstance.querySelectorAll('Component')];
+
         components.forEach((component, index) => {
-            let pid = this.cache.children[index].pid;
+
+            const pid = this.cache.children[index].pid;
+            const attributes = component.attributes;
+
             component.outerHTML = Static.stampPID(pid, this.cache.children[index].draw());
+            Static.attributize(Static.getDOMInstance(pid), attributes);
+            
             this.cache.children[index].bind();
         });
+
         this.bind()
     }
     destroy(entirety) {

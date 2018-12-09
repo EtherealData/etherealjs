@@ -58,7 +58,6 @@ export default class BaseDisplay extends Base {
                 attributes = component.attributes
 
             if(!definition || !this.runtime.library[definition]){
-                console.warn('could not find definition for ', component);
                 return;
             }
 
@@ -70,9 +69,8 @@ export default class BaseDisplay extends Base {
                     properties: properties
                 });
 
-            let generated = hasEvents ? Static.getDOMInstance(this.cache.children[index].pid) : null; 
+            let generated = Static.getDOMInstance(this.cache.children[index].pid);
             generated && [...attributes].forEach((att)=>{
-                console.log('generated', generated)
                 generated.setAttribute(att.name, att.value);
             })
             generated && this.attach(generated);

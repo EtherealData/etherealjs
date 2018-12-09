@@ -15,6 +15,12 @@ export default class Static {
         }
         return properties;
     }
+    static attributize (element, attributes) {
+        [...attributes].forEach((att)=>{
+            element.setAttribute(att.name, att.value);
+        })
+        return element;
+    }
     static shade(col, amt) {
         var usePound = false;
         if (col[0] == "#") {
@@ -46,11 +52,14 @@ export default class Static {
             'click': 'click',
             'focus': 'focus',
             'drag': 'drag',
+            'keyup': 'keyup',
+            'keydown': 'keydown',
             'mouseover': 'mouseover',
             'mouseleave': 'mouseleave',
             'mouseenter': 'mouseenter',
             'mousein': 'mousein',
-            'mouseout': 'mouseout'
+            'mouseout': 'mouseout',
+            'submit': 'submit'
         }
     }
     static getStyleSheetFromMap(map, pid) {
@@ -84,8 +93,7 @@ export default class Static {
                 }
         }
         traverse(map);
-                                                // body += '} ';
-
+        // body += '} ';
         return body;
     }
     static format(string, to){
