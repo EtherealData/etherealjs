@@ -38,30 +38,32 @@ export default class BaseDisplay extends Base {
 
 
     bind() {
-        let instance = Static.getDOMInstance(this.pid),
-            events = Static.getEventMap(),
-            components = [...instance.querySelectorAll('[e]')];
+        const instance = Static.getDOMInstance(this.pid);
+        const components = [...instance.querySelectorAll('[e]')];
+
         instance.hasAttribute('e') && components.push(instance);
+
         components.forEach((element, index) => {
             element.removeAttribute('e');
             element.setAttribute('has-events', true);
             this.attach(element);
         });
+
         return this.context;
     }
     resolve() {
-        let childComponents = [...Static.getDOMInstance(this.pid).querySelectorAll('Component')];
-        childComponents && childComponents.forEach((component, index) => {
-            let definition = component.getAttribute('definition'),
-                properties = {},
-                hasEvents = component.getAttribute('has-events'),
-                attributes = component.attributes
+        const children = [...Static.getDOMInstance(this.pid).querySelectorAll('Component')];
+
+        children.forEach((component, index) => {
+            const definition = component.getAttribute('definition');
+            const properties = {};
+            const attributes = component.attributes;
 
             if(!definition || !this.runtime.library[definition]){
-                return;
+                throw new Error(`Couldn't find library definition for ${definition}`)
             }
 
-            this.cache.children[index] = new this.runtime.library[definition]({
+            const instance = new this.runtime.library[definition]({
                     runtime: this.runtime,
                     context: component,
                     origin: this,
@@ -69,12 +71,13 @@ export default class BaseDisplay extends Base {
                     properties: properties
                 });
 
-            let generated = Static.getDOMInstance(this.cache.children[index].pid);
-            generated && [...attributes].forEach((att)=>{
-                generated.setAttribute(att.name, att.value);
-            })
-            generated && this.attach(generated);
+            const element = Static.getDOMInstance(instance.pid);
 
+            [...attributes].forEach((att)=>{
+                element.setAttribute(att.name, att.value);
+            });
+
+            this.attach(element);
         });
     }
 

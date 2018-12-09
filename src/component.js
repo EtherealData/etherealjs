@@ -15,20 +15,7 @@ export default class Component extends BaseDisplay {
 
         instance.outerHTML = Static.stampPID(this.pid, this.draw());
 
-        const newInstance = document.querySelector(`[component-pid="${this.pid}"]`)
-        const components = [...newInstance.querySelectorAll('Component')];
-
-        components.forEach((component, index) => {
-
-            const pid = this.cache.children[index].pid;
-            const attributes = component.attributes;
-
-            component.outerHTML = Static.stampPID(pid, this.cache.children[index].draw());
-            Static.attributize(Static.getDOMInstance(pid), attributes);
-            
-            this.cache.children[index].bind();
-        });
-
+        this.resolve();
         this.bind()
     }
     destroy(entirety) {
