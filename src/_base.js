@@ -4,12 +4,11 @@ export default class Base {
     constructor(config) {
 
         this.pid = Static.generatePID();
-        this._onInstantiate && this._onInstantiate(config);
+        this._construct && this._construct(config);
 
         if(config && Object.keys(config) && Object.keys(config).length > 0){
             for(let key in config){
                 if(this[key]) {
-                    console.warn(`ODComponent - passed key ${key} in config which is already bound`);
                     continue;
                 }
                 this[key] = config[key];
