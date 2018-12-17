@@ -3,24 +3,21 @@ import Static from "./static.js";
 import Router from './router.js';
 
 export default class Runtime extends Base {
-    constructor(config) {
-        super(config);
-    }
-
-    _onLoaded(config) {
-        this.container = this.container || null;
+    _construct(config) {
+        this.container = config.container;
         this.context = this.container && document.querySelector(this.container) || document.body;
-        this.styles = this.styles || null;
+        this.styles = config.styles;
         this.styles && this.decorate(this.styles());
+        this.processes = {
+            roots: {}
+        };
 
-        this.processes = this.processes || {};
-        this.processes.roots = {};
-
-        this.library = this.library || {};
+        this.library = config.library;
 
         this.route();
 
-        let components = [...this.context.querySelectorAll('Component')];
+        const  components = [...this.context.querySelectorAll('Component')];
+
         if(this.definition) {
             let shadow = document.createElement("shadow");
             this.context = this.context.appendChild(shadow);
@@ -30,20 +27,26 @@ export default class Runtime extends Base {
                 runtime: this,
                 attributes: this.context.attributes
             });
-        }       
+        }
+
         if(components && components.length) {
             components.forEach((component, index) => {
-                let definition = component.getAttribute('definition');
+                const definition = component.getAttribute('definition');
+                const satellite = component.getAttribute('subscribe');
                 if(!definition || !this.library[definition]){
                     console.warn('Found component with no definition. Skipping');
                     return;
                 }
-                new this.library[definition]({
+                const process = new this.library[definition]({
                     context: component,
                     origin: this,
                     runtime: this,
                     attributes: component.attributes
-                }) 
+                });
+                this.processes[process.pid] = process;
+                if(satellite && this.library[satellite]) {
+                    this.library[satellite].subscribe(process);
+                }
             });
             return;
         }
@@ -71,6 +74,9 @@ export default class Runtime extends Base {
             return true;
         }
         return false;
+    }
+    terminate(process) {
+        delete this.processes[process.pid];
     }
     decorate(map) {
         let sheet = document.createElement('style');

@@ -2,17 +2,17 @@ import Base from './_base.js';
 import Static from './static.js';
 import Runtime from './runtime.js'
 import Router from './router.js'
+import Satellite from './satellite.js'
 
 export default class BaseDisplay extends Base {
     constructor(config) {
         super(config);
     }
     _onLoaded(config) {
-        this.runtime = this.runtime || {};
-        this.context = this.context || null;
-        this.attributes = this.attributes || null;
-        this.properties = this.properties || {};
-        this.origin = this.origin || null;
+        this.runtime = config.runtime;
+        this.context = config.context;
+        this.attributes = config.attributes;
+        this.origin = config.origin;
         this.parent = this.context.parentNode || null;
         this.cache = {
             children: []
@@ -56,6 +56,7 @@ export default class BaseDisplay extends Base {
 
         children.forEach((component, index) => {
             const definition = component.getAttribute('definition');
+            const satellite = component.getAttribute('subscribe');
             const properties = {};
             const attributes = component.attributes;
 
@@ -68,8 +69,14 @@ export default class BaseDisplay extends Base {
                     context: component,
                     origin: this,
                     attributes: component.attributes,
-                    properties: properties
+                    properties: properties,
+                    satellites: {}
                 });
+            
+            if(satellite && this.runtime.library[satellite] instanceof Satellite) {
+                this.runtime.library[satellite].subscribe(instance);
+                instance.satellites[satellite] = this.runtime.library[satellite];
+            }
 
             const element = Static.getDOMInstance(instance.pid);
 
