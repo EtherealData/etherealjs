@@ -1,22 +1,24 @@
-import Static from './static.js';
+import Static from "./static.js";
 
 export default class Base {
-    constructor(config) {
-        this.pid = Static.generatePID();
+  constructor(config) {
+    this.pid = Static.generatePID();
+    this.store = {};
 
-        this._construct(config);
+    this._construct(config);
 
-        this._onLoaded(config);
-    }
+    this._onLoaded(config);
+  }
 
-    setStore(map) { this.store = map; }
-    
-    _construct(config) { }
+  setStore(map) {
+    this.store = map;
+  }
 
-    _onInstantiate(config) { }
-    
-    _onLoaded(config) { }
+  _construct(config) {}
 
-    _onTerminate(process) { }
+  _onInstantiate(config) {}
 
+  _onLoaded(config) {}
+
+  _onTerminate(process) {}
 }
