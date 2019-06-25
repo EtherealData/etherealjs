@@ -25,6 +25,7 @@ export default class Component extends BaseDisplay {
   setStore(map) {
     super.setStore(map);
     this.synchronize();
+    this.decorate();
   }
   setRuntimeStore(map) {
     this.runtime.setStore(map);

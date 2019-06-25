@@ -49,6 +49,7 @@ export default class Static {
         return {
             'blur': 'blur',
             'change': 'change',
+            'input': 'input',
             'click': 'click',
             'focus': 'focus',
             'drag': 'drag',

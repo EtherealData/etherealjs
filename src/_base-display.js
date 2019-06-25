@@ -29,7 +29,7 @@ export default class BaseDisplay extends Base {
     this.context.outerHTML = this.state;
     this.runtime.processes[this.pid] = this;
 
-    this.style && this.decorate(this.style());
+    this.style && this.decorate();
 
     if (this.origin instanceof Runtime || this.origin instanceof Router) {
       this.runtime.processes.roots[this.pid] = this;
@@ -123,20 +123,24 @@ export default class BaseDisplay extends Base {
             );
             break;
           default:
-            element.addEventListener(
-              events[element.attributes[i]["name"]],
-              ev => this[element.attributes[i]["value"]].call(this, ev)
-            );
-            break;
+              // [this[element.attributes[i]]["value"]] && 
+              this[element.attributes[i]["value"]] && this[element.attributes[i]["value"]].call &&
+              element.addEventListener(
+                events[element.attributes[i]["name"]],
+                ev => this[element.attributes[i]["value"]] && this[element.attributes[i]["value"]].call && this[element.attributes[i]["value"]].call(this, ev)
+              );
+             break;
+            }
         }
       }
-    }
+    
   }
 
-  decorate(map) {
-    let sheet = document.createElement("style");
-    document.body.appendChild(sheet);
-    sheet.innerHTML = Static.getStyleSheetFromMap(map, this.pid);
-    sheet.setAttribute("belongs-to", this.pid);
+  decorate() {
+    if(!this.style || !this.style()) return;
+    const sheet = document.createElement("style");
+    const domInstance = Static.getDOMInstance(this.pid)
+    domInstance.appendChild(sheet);
+    sheet.innerHTML = Static.getStyleSheetFromMap(this.style(), this.pid);
   }
 }
