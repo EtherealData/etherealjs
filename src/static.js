@@ -53,6 +53,8 @@ export default class Static {
             'click': 'click',
             'focus': 'focus',
             'drag': 'drag',
+            'dragstart': 'dragstart',
+            'dragend': 'dragend',
             'keyup': 'keyup',
             'keydown': 'keydown',
             'mouseover': 'mouseover',
